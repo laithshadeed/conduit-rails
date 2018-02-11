@@ -13,4 +13,12 @@ class CommentsController < ApplicationController
 
     render json: {"comments": comments} , status: 200
   end
+
+  def create
+    render json: {"created": "#{params[:slug]}"}, status: 200
+  end
+
+  def destroy
+    render json: {"destroy": "#{params[:slug]}"}, status: 200
+  end
 end

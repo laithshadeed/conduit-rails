@@ -7,15 +7,23 @@ class UsersController < ApplicationController
     "ayham": {
       "username": "ayham",
       "bio": "im Ayham"
+    },
+    "rick": {
+      "username": "rick",
+      "bio": "im Rick"
     }
   }
+
+  def index
+    render json: {"profile": @@users[:laith]}, status: 200
+  end
 
   def create
     render json: {"created": "OK"}, status: 200
   end
 
   def show
-    render json: {"user": @@users[:laith]} , status: 200
+    render json: {"profile": @@users[params[:username].to_sym]}, status: 200
   end
 
   def update
@@ -24,10 +32,6 @@ class UsersController < ApplicationController
 
   def login
     render json: {"login": "Succeed"}, status: 200
-  end
-
-  def profile
-    render json: {"profile": @@users[params[:username].to_sym]}, status: 200
   end
 
   def follow
