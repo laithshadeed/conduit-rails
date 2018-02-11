@@ -1,33 +1,22 @@
 class UsersController < ApplicationController
-  @@users = {
-    "laith": {
-      "username": "laith",
-      "bio": "im Laith"
-    },
-    "ayham": {
-      "username": "ayham",
-      "bio": "im Ayham"
-    },
-    "rick": {
-      "username": "rick",
-      "bio": "im Rick"
-    }
-  }
-
   def index
-    render json: {"profile": @@users[:laith]}, status: 200
+    render json: {"profile": User.find(1)}, status: 200
   end
 
   def create
+    @user = User.new(params.require(:user).permit(:username, :email, :password))
+    @user.save
     render json: {"created": "OK"}, status: 200
   end
 
-  def show
-    render json: {"profile": @@users[params[:username].to_sym]}, status: 200
+  def update
+    @user = User.find(1)
+    @user.update(params.require(:user).permit(:username, :email, :password, :image))
+    render json: {"updated": "OK"}, status: 200
   end
 
-  def update
-    render json: {"updated": "OK"}, status: 200
+  def show
+    render json: {"profile": User.find_by(username: params[:username])}, status: 200
   end
 
   def login
