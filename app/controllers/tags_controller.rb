@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: Implement tags table
+
 class TagsController < ApplicationController
   def index
     tags = %w[

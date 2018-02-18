@@ -1,43 +1,47 @@
 # frozen_string_literal: true
 
+# TODO: Add error handling
+# TODO: Implement follow/unfollow
+
 require "base64"
 
 class UsersController < ApplicationController
-  KEY = "SECRET"
+  before_action :authenticate, except: %i[login create show]
 
   def index
-    @user = User.find(1)
-    render json: { 'profile': format(@user) }, status: 200
+    render json: { user: format(@current_user) }, status: 200
   end
 
   def create
-    @user = User.new(params.require(:user).permit(:username, :email, :password))
-    @user.save
-    render json: { 'created': "OK" }, status: 200
+    user = User.new(params.require(:user).permit(:username, :email, :password))
+    return server_error unless user.save
+    render json: { user: format(user) }, status: 200
   end
 
   def update
-    @user = User.find(1)
-    @user.update(params.require(:user).permit(:username, :email, :password, :image, :bio))
-    render json: { user: format(@user) }, status: 200
+    can_update = @current_user.update(params.require(:user).permit(:username, :email, :password, :image, :bio))
+    return server_error unless can_update
+    render json: { user: format(@current_user) }, status: 200
   end
 
   def show
-    @user = User.find_by(username: params[:username])
-    render json: { profile: format_profile(@user) }, status: 200
+    user = User.find_by(username: params[:username])
+    return not_found if user.nil?
+    render json: { profile: format_profile(user) }, status: 200
   end
 
   def login
-    @user = User.find(1)
-    render json: { user: format(@user) }, status: 200
+    user = User.find_by(params.require(:user).permit(:email, :password))
+    return not_found if user.nil?
+    render json: { user: format(user) }, status: 200
   end
 
   def follow
-    render json: { 'followed': params[:username].to_s }, status: 200
+    render json: { profile: format_profile(@current_user) }, status: 200
   end
 
   def unfollow
-    render json: { 'unfollowed': params[:username].to_s }, status: 200
+    render json: { profile: format_profile(@current_user) }, status: 200
   end
 
   private
@@ -60,33 +64,7 @@ class UsersController < ApplicationController
       username: user.username,
       bio: user.bio,
       image: user.image,
-      following: false # TODO
+      following: false
     }
-  end
-
-  def decode_token(token)
-    (header_encoded, payload_encoded, mac_encoded) = token.split(".")
-    payload = Base64.urlsafe_decode64(payload_encoded)
-    mac = Base64.urlsafe_decode64(mac_encoded)
-    data = header_encoded + "." + payload_encoded
-    my_mac = Base64.urlsafe_encode64(OpenSSL::HMAC.digest("sha256", KEY, data))
-    payload = nil unless mac == my_mac
-    payload
-  end
-
-  def encode_token(user)
-    header = {
-      alg: "HS256",
-      typ: "JWT"
-    }
-
-    payload = {
-      id: user.id,
-      username: user.username
-    }
-
-    data = Base64.urlsafe_encode64(header.to_json) + "." + Base64.urlsafe_encode64(payload.to_json)
-    mac = Base64.urlsafe_encode64(OpenSSL::HMAC.digest("sha256", KEY, data))
-    "#{data}.#{mac}"
   end
 end

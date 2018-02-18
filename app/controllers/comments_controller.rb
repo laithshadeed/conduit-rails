@@ -1,22 +1,24 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
+  before_action :authenticate, except: :index
+
   def index
-    @article = Article.find_by(slug: params[:slug])
-    @comments = []
-    Comment.includes(:user).where(article_id: @article.id).each do |c|
-      @comments.push(format(c))
+    article = Article.find_by(slug: params[:slug])
+    comments = []
+    Comment.includes(:user).where(article_id: article.id).each do |c|
+      comments.push(format(c))
     end
-    render json: { "comments": @comments }, status: 200
+    render json: { "comments": comments }, status: 200
   end
 
   def create
-    @options = params.require(:comment).permit(:body)
-    @options[:user] = User.find(1)
-    @options[:article] = Article.find_by(slug: params[:slug])
-    @comment = Comment.create(@options)
-    @comment.save
-    render json: { "comment": format(@comment) }, status: 200
+    options = params.require(:comment).permit(:body)
+    options[:user] = current_user
+    options[:article] = Article.find_by(slug: params[:slug])
+    comment = Comment.create(options)
+    comment.save
+    render json: { "comment": format(comment) }, status: 200
   end
 
   def destroy
@@ -37,7 +39,7 @@ class CommentsController < ApplicationController
         username: c.user.username,
         bio: c.user.bio,
         image: c.user.image,
-        following: false # TODO
+        following: false
       }
     }
   end
