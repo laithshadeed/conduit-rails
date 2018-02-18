@@ -22,8 +22,9 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = Comment.find(params[:id])
-    @comment.destroy
+    comment = Comment.find(params[:id])
+    return forbidden unless comment.user_id == @current_user.id
+    comment.destroy
     render json: {}, status: 200
   end
 

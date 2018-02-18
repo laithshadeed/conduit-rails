@@ -36,12 +36,14 @@ class ArticlesController < ApplicationController
 
   def update
     article = Article.find_by(slug: params[:slug])
+    return forbidden unless article.user_id == @current_user.id
     article.update(params.require(:article).permit(:title, :description, :body))
     render json: { "article": format(article) }, status: 200
   end
 
   def destroy
     article = Article.find_by(slug: params[:slug])
+    return forbidden unless article.user_id == @current_user.id
     article.destroy
     render json: {}, status: 200
   end
