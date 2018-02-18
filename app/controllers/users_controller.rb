@@ -58,13 +58,4 @@ class UsersController < ApplicationController
       updatedAt: user.updated_at
     }
   end
-
-  def format_profile(user)
-    {
-      username: user.username,
-      bio: user.bio,
-      image: user.image,
-      following: false
-    }
-  end
 end

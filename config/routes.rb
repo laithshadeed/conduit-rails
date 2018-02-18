@@ -8,8 +8,8 @@ Rails.application.routes.draw do
     put "user", to: "users#update"
     post "users/login", to: "users#login"
     get "profiles/:username", to: "users#show"
-    post "profiles/:username/follow", to: "users#follow"
-    delete "profiles/:username/follow", to: "users#unfollow"
+    post "profiles/:username/follow", to: "followers#follow"
+    delete "profiles/:username/follow", to: "followers#unfollow"
 
     resources :tags, only: :index
 

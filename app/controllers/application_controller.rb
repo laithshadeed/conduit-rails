@@ -9,23 +9,33 @@ class ApplicationController < ActionController::API
 
   private
 
-  def format_article(a)
-    article = {}
-    article[:title] = a.title
-    article[:slug] = a.slug
-    article[:body] = a.body
-    article[:createdAt] = a.created_at
-    article[:updatedAt] = a.updated_at
-    article[:tagList] = []
-    article[:description] = a.description
-    article[:author] = {
-      username: a.user.username,
-      bio: a.user.bio,
-      image: a.user.image,
+  def format_profile(user)
+    profile = {
+      username: user.username,
+      bio: user.bio,
+      image: user.image,
       following: false
     }
-    article[:favorited] = a.favorites.to_a.any? { |f| f.user_id == @current_user.id }
-    article[:favoritesCount] = a.favorites.length
+
+    profile[:following] = user.followers.to_a.any? { |f| f.follower_id == @current_user.id } unless @current_user.nil?
+
+    profile
+  end
+
+  def format_article(a)
+    article = {
+      title: a.title,
+      slug: a.slug,
+      body: a.body,
+      createdAt: a.created_at,
+      updatedAt: a.updated_at,
+      tagList: [],
+      description: a.description,
+      author: format_profile(a.user),
+      favorited: false,
+      favoritesCount: a.favorites.size
+    }
+    article[:favorited] = a.favorites.to_a.any? { |f| f.user_id == @current_user.id } unless @current_user.nil?
     article
   end
 
