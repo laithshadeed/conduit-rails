@@ -7,6 +7,26 @@ class ApplicationController < ActionController::API
 
   private
 
+  def format_article(a)
+    article = {}
+    article[:title] = a.title
+    article[:slug] = a.slug
+    article[:body] = a.body
+    article[:createdAt] = a.created_at
+    article[:updatedAt] = a.updated_at
+    article[:tagList] = []
+    article[:description] = a.description
+    article[:author] = {
+      username: a.user.username,
+      bio: a.user.bio,
+      image: a.user.image,
+      following: false
+    }
+    article[:favorited] = false # TODO
+    article[:favoritesCount] = a.favorites.length
+    article
+  end
+
   def authenticate
     return unauthorized unless valid_user?
   end

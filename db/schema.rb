@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_211_193_006) do
+ActiveRecord::Schema.define(version: 20_180_218_161_148) do
   create_table "articles", force: :cascade do |t|
     t.string "slug"
     t.string "title"
@@ -34,6 +34,16 @@ ActiveRecord::Schema.define(version: 20_180_211_193_006) do
     t.integer "article_id"
     t.index ["article_id"], name: "index_comments_on_article_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer "article_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index %w[article_id user_id], name: "index_favorites_on_article_id_and_user_id", unique: true
+    t.index ["article_id"], name: "index_favorites_on_article_id"
+    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|

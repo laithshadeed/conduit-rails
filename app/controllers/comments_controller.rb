@@ -14,17 +14,17 @@ class CommentsController < ApplicationController
 
   def create
     options = params.require(:comment).permit(:body)
-    options[:user] = current_user
+    options[:user] = @current_user
     options[:article] = Article.find_by(slug: params[:slug])
     comment = Comment.create(options)
-    comment.save
+    return server_error unless comment.save
     render json: { "comment": format(comment) }, status: 200
   end
 
   def destroy
     comment = Comment.find(params[:id])
     return forbidden unless comment.user_id == @current_user.id
-    comment.destroy
+    return server_error unless comment.destroy
     render json: {}, status: 200
   end
 

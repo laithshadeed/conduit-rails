@@ -18,8 +18,8 @@ Rails.application.routes.draw do
         get "feed"
       end
       member do
-        post "favorite"
-        delete "favorite", action: :unfavorite
+        post "favorite", to: "favorites#create"
+        delete "favorite", to: "favorites#destroy"
         resources :comments, only: %i[index create destroy]
       end
     end
