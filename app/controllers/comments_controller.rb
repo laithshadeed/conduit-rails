@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: Order comments
+
 class CommentsController < ApplicationController
   before_action :authenticate, except: :index
 

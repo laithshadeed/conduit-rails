@@ -7,6 +7,7 @@
 # TODO: Implement feed (created articles by followers)
 # TODO: Implement tagList
 # TODO: Implement update slug when title updates
+# TODO: Order articles
 
 class ArticlesController < ApplicationController
   before_action :authenticate, except: %i[index show]

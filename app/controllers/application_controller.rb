@@ -3,6 +3,8 @@
 # TODO: Use Rails way of Authentication
 
 class ApplicationController < ActionController::API
+  before_action :valid_user?
+
   KEY = "SECRET"
 
   private
@@ -22,22 +24,22 @@ class ApplicationController < ActionController::API
       image: a.user.image,
       following: false
     }
-    article[:favorited] = false # TODO
+    article[:favorited] = a.favorites.to_a.any? { |f| f.user_id == @current_user.id }
     article[:favoritesCount] = a.favorites.length
     article
   end
 
   def authenticate
-    return unauthorized unless valid_user?
+    return unauthorized if @current_user.nil?
   end
 
   def valid_user?
     auth_header = request.headers[:authorization]
-    return false if auth_header.nil? || auth_header.empty?
+    return if auth_header.nil? || auth_header.empty?
     token = auth_header.split(" ")[1]
-    return false if token.nil? || token.empty?
+    return if token.nil? || token.empty?
     payload = decode_token(token)
-    return false if payload.nil?
+    return if payload.nil?
     @current_user = User.find_by(id: payload["id"])
   end
 
