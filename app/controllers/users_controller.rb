@@ -18,13 +18,13 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(1)
-    @user.update(params.require(:user).permit(:username, :email, :password, :image))
+    @user.update(params.require(:user).permit(:username, :email, :password, :image, :bio))
     render json: { user: format(@user) }, status: 200
   end
 
   def show
     @user = User.find_by(username: params[:username])
-    render json: { profile: format(@user) }, status: 200
+    render json: { profile: format_profile(@user) }, status: 200
   end
 
   def login
@@ -52,6 +52,15 @@ class UsersController < ApplicationController
       image: user.image,
       createdAt: user.created_at,
       updatedAt: user.updated_at
+    }
+  end
+
+  def format_profile(user)
+    {
+      username: user.username,
+      bio: user.bio,
+      image: user.image,
+      following: false # TODO
     }
   end
 
