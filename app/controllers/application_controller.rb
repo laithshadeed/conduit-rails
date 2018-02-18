@@ -29,7 +29,7 @@ class ApplicationController < ActionController::API
       body: a.body,
       createdAt: a.created_at,
       updatedAt: a.updated_at,
-      tagList: [],
+      tagList: a.tags.to_a.map(&:name),
       description: a.description,
       author: format_profile(a.user),
       favorited: false,
