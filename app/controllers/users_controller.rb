@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: Add error handling
-# TODO: Implement follow/unfollow
-
 require "base64"
 
 class UsersController < ApplicationController

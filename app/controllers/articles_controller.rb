@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# TODO: Add error handling
-
 class ArticlesController < ApplicationController
   before_action :authenticate, except: %i[index show]
 

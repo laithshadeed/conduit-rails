@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-# TODO: Order comments
-
 class CommentsController < ApplicationController
   before_action :authenticate, except: :index
 
   def index
     article = Article.find_by(slug: params[:slug])
     comments = []
-    Comment.includes(:user).where(article_id: article.id).each do |c|
+    Comment.includes(:user).where(article_id: article.id).order(updated_at: :desc).each do |c|
       comments.push(format(c))
     end
     render json: { "comments": comments }, status: 200

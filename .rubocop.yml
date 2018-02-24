@@ -15,3 +15,5 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
 Style/MixinUsage:
   Enabled: false
+Layout/LeadingCommentSpace:
+  Enabled: false
