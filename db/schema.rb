@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_218_193_040) do
+ActiveRecord::Schema.define(version: 2018_02_24_214114) do
+
   create_table "articles", force: :cascade do |t|
     t.string "slug"
     t.string "title"
@@ -41,16 +40,19 @@ ActiveRecord::Schema.define(version: 20_180_218_193_040) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index %w[article_id user_id], name: "index_favorites_on_article_id_and_user_id", unique: true
+    t.index ["article_id", "user_id"], name: "index_favorites_on_article_id_and_user_id", unique: true
     t.index ["article_id"], name: "index_favorites_on_article_id"
     t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
-  create_table "followers", force: :cascade do |t|
-    t.integer "user_id"
+  create_table "relationships", force: :cascade do |t|
     t.integer "follower_id"
+    t.integer "followed_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["followed_id"], name: "index_relationships_on_followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
+    t.index ["follower_id"], name: "index_relationships_on_follower_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -72,4 +74,5 @@ ActiveRecord::Schema.define(version: 20_180_218_193_040) do
     t.datetime "updated_at", null: false
     t.index ["username"], name: "index_users_on_username", unique: true
   end
+
 end

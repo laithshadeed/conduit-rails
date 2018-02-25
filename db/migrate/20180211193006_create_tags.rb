@@ -9,5 +9,6 @@ class CreateTags < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+    add_reference :tags, :article, foreign_key: true
   end
 end

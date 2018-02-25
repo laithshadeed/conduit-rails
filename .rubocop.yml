@@ -15,5 +15,15 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
 Style/MixinUsage:
   Enabled: false
+Style/NumericLiterals:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/WordArray:
+  Enabled: false
+Style/SymbolArray:
+  Enabled: false
 Layout/LeadingCommentSpace:
+  Enabled: false
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false

@@ -12,7 +12,7 @@ class ArticlesController < ApplicationController
     where[:tags] = Tag.where(name: opts[:tag]) unless opts[:tag].nil?
     where[:user] = User.find_by(username: opts[:author]) unless opts[:author].nil?
     Article
-      .includes(:tags, :favorites, user: [:followers])
+      .includes(:tags, :favorites, user: [:active_relationships])
       .where(where)
       .order(updated_at: :desc)
       .limit(limit)
@@ -31,9 +31,9 @@ class ArticlesController < ApplicationController
     articles = []
     where = {}
     where[:tags] = Tag.where(name: opts[:tag]) unless opts[:tag].nil?
-    where[:user] = Follower.where(follower_id: @current_user.id).map(&:user_id)
+    where[:user] = Relationship.where(follower_id: @current_user.id).map(&:followed_id)
     Article
-      .includes(:tags, :favorites, user: [:followers])
+      .includes(:tags, :favorites, user: [:active_relationships])
       .joins(:user)
       .where(where)
       .order(updated_at: :desc)

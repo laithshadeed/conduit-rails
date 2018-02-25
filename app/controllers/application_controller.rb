@@ -17,7 +17,8 @@ class ApplicationController < ActionController::API
       following: false
     }
 
-    profile[:following] = user.followers.to_a.any? { |f| f.follower_id == @current_user.id } unless @current_user.nil?
+    #profile[:following] = user.followers.to_a.any? { |f| f.follower_id == @current_user.id } unless @current_user.nil?
+    profile[:following] = user.followers.include?(@current_user) unless @current_user.nil?
 
     profile
   end

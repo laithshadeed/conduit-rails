@@ -34,11 +34,21 @@ class UsersController < ApplicationController
   end
 
   def follow
-    render json: { profile: format_profile(@current_user) }, status: 200
+    other_user = User.find_by(username: params[:username])
+    @current_user.following << other_user
+    return server_error unless @current_user.save
+    render json: { profile: format_profile(other_user) }, status: 200
   end
 
   def unfollow
-    render json: { profile: format_profile(@current_user) }, status: 200
+    other_user = User.find_by(username: params[:username])
+    can_delete = @current_user.following.delete(other_user)
+    return server_error unless can_delete
+    render json: { "profile": format_profile(other_user) }, status: 200
+  end
+
+  def following?(other_user)
+    @current_user.following.include?(other_user)
   end
 
   private
